@@ -12,3 +12,25 @@ def find_links(url):
             'links': links}
 
 
+def side_map(url):
+    map = {url: find_links(url)}
+    to_visit = list(map[url]['links'])
+    visited = []
+
+    while to_visit:
+        for link in to_visit:
+            if link not in visited and link.startswith(url):
+                visited.append(link)
+                to_visit.remove(link)
+            else:
+                to_visit.remove(link)
+                continue
+            try:
+                new_links = find_links(link)
+            except Exception:
+                to_visit.remove(link)
+
+            map[link] = new_links
+            to_visit.extend(map[link]['links'])
+
+    return map
